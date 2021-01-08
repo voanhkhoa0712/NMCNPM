@@ -3,6 +3,7 @@ package com.example.group5;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -299,8 +300,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
             if (v == btnStop){//stop
-                stopButton();
                 getSnapshot();
+                stopButton();
+                passToSavedActivity();
             }
         }
     };
@@ -310,7 +312,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             isPause = false;
         }
         stopTimer();
-        sum = 0;
+
         btnPause.setBackgroundResource(R.drawable.logo_round);
         btnStart.setEnabled(true);
         btnStart.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary_Khoa, null));
@@ -329,10 +331,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
 
-        final SnapshotReadyCallback callback = new SnapshotReadyCallback() {
+        SnapshotReadyCallback callback = new SnapshotReadyCallback() {
             @Override
-            public void onSnapshotReady(Bitmap snapshot) {
-                runRoute = snapshot;
+            public void onSnapshotReady(Bitmap bitmap) {
+                runRoute = bitmap;
             }
         };
 
@@ -418,7 +420,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mTimerTask = null;
 
         }
-        count = 0;
     }
 
     public void sendMessage(int id) {
@@ -487,13 +488,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         double b = rad(lon1) - rad(lon2);
         double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) +
                 Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
-        double EARTH_RADIUS = 10000;
+        double EARTH_RADIUS = 9000;
         s = s * EARTH_RADIUS;
         return s;
     }
 
     public double getPace(double length, int t) {
-        return (length / t);
+        return (length * 3600 / t);
     }
 
     /*time display*/
@@ -519,10 +520,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     lonList.get(j));
         }
 
-        double curPace = getPace(d, Math.min(size, 5)) * 3600;
+        double curPace = getPace(d, Math.min(size, 5));
         @SuppressLint("DefaultLocale") String CurPace = String.format("%.2f", curPace);
         textPace.setText(CurPace);
 
         pace = getPace(sum, count);
+    }
+
+    @SuppressLint("DefaultLocale")
+    public void passToSavedActivity(){
+        Intent intent = new Intent(MapsActivity.this, SaveActivity.class);
+        intent.putExtra("duration", getTime(count));
+        intent.putExtra("pace", String.format("%.2f", pace));
+        intent.putExtra("distance", String.format("%.2f", sum));
+
+        startActivity(intent);
     }
 }

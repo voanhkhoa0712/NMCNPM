@@ -53,7 +53,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="00:30:12"
+                android:id="@+id/save_duration"
                 android:textColor="@color/black"
                 android:fontFamily="@font/wald"
                 android:textSize="23dp">
@@ -77,7 +77,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="8.69"
+                android:id="@+id/save_distance"
                 android:textColor="@color/black"
                 android:fontFamily="@font/wald"
                 android:textSize="23sp">
@@ -101,7 +101,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="6.2"
+                android:id="@+id/save_pace"
                 android:textColor="@color/black"
                 android:fontFamily="@font/wald"
                 android:textSize="23sp">

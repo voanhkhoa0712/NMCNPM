@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -32,7 +33,7 @@ import java.util.Map;
 public class SaveActivity extends AppCompatActivity {
     ImageView image;
     Bitmap bmp;
-    String username, duration, pace, distance, caption;
+    String duration, pace, distance, caption;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +42,20 @@ public class SaveActivity extends AppCompatActivity {
         image = (ImageView)findViewById(R.id.display_img);
 
         Intent intent = getIntent();
-        username = intent.getStringExtra("username");
         duration = intent.getStringExtra("duration");
         pace = intent.getStringExtra("pace");
         distance = intent.getStringExtra("distance");
-        bmp = BitmapFactory.decodeResource(getResources(), R.drawable.image);
-        image.setImageBitmap(bmp);
+
+        TextView durationView = (TextView) findViewById(R.id.save_duration);
+        TextView paceView = (TextView) findViewById(R.id.save_pace);
+        TextView distanceView = (TextView) findViewById(R.id.save_distance);
+
+        durationView.setText(duration);
+        paceView.setText(pace);
+        distanceView.setText(distance);
+
+        //bmp = BitmapFactory.decodeResource(getResources(), R.drawable.image);
+        //image.setImageBitmap(bmp);
     }
     public void btn_add_onclick(View view) {
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -90,14 +99,13 @@ public class SaveActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams()
                     throws AuthFailureError {
-                String img_str = getStringImage(bmp);
+                //String img_str = getStringImage(bmp);
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("username", username);
                 params.put("duration", duration);
                 params.put("pace", pace);
                 params.put("distance", distance);
                 params.put("caption", caption);
-                params.put("image", img_str);
+                //params.put("image", img_str);
                 return params;
             }
         };
