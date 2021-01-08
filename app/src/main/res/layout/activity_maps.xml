@@ -58,7 +58,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="00'00''"
+            android:text="0.00"
             android:textColor="@color/data"
             android:textSize="30dp" />
 
@@ -86,7 +86,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:text="Pace"
+            android:text="Pace (km/h)"
             android:textColor="@color/text"
             android:textSize="20dp" />
 

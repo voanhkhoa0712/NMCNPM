@@ -4,6 +4,10 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +31,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -58,9 +63,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Handler mHandler = null;
 
     private static int count = 0;
-    private static double s = 0;
     private static double sum = 0;
     private static double pace = 0;
+    public Bitmap runRoute;
 
     private boolean isPause = false;
     private boolean isStop = true;
@@ -135,6 +140,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap map) {
         mMap = map;
+
         // ask for the permission of requesting location
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1340);
@@ -211,7 +217,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .width(5);
             System.out.print("I am running slow");
         }
-        if (vdraw >=0.008 && vdraw <=0.03){
+        if (vdraw >=0.01 && vdraw <=0.03){
             lineOptions.add(new LatLng(previousLocation.getLatitude(), previousLocation.getLongitude()))
                     .add(new LatLng(location.getLatitude(), location.getLongitude()))
                     .color(ResourcesCompat.getColor(getResources(), R.color.normal, null))
@@ -267,7 +273,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startTimer();
                 btnPause.setBackgroundResource(R.drawable.pause_button);
                 textDis.setText("0.00");
-                textPace.setText("00'00''");
+                textPace.setText("0.00");
 
                 //get the current time from device system and parse to String
                 String startTime = Calendar.getInstance().getTime().toString();
@@ -294,6 +300,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             if (v == btnStop){//stop
                 stopButton();
+                getSnapshot();
             }
         }
     };
@@ -317,6 +324,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         points.clear();
     }
 
+    public void getSnapshot(){
+        if (mMap == null) {
+            return;
+        }
+
+        final SnapshotReadyCallback callback = new SnapshotReadyCallback() {
+            @Override
+            public void onSnapshotReady(Bitmap snapshot) {
+                runRoute = snapshot;
+            }
+        };
+
+        mMap.snapshot(callback, runRoute);
+    }
+
     private void showBounds(){
 
         LatLngBounds.Builder boundBuilder = new LatLngBounds.Builder();
@@ -335,6 +357,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, deviceWidth, deviceHeight, devicePadding);
         mMap.animateCamera(cu);
+    }
+
+    public static Bitmap getBitmapFromView(View view) {
+        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(returnedBitmap);
+        Drawable bgDrawable =view.getBackground();
+        if (bgDrawable!=null)
+            bgDrawable.draw(canvas);
+        else
+            canvas.drawColor(Color.WHITE);
+        view.draw(canvas);
+        return returnedBitmap;
     }
 
     private void startTimer() {
@@ -442,27 +476,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return hour + ":" + minute + ":" + second;
     }
 
-    public static String formatOfPace(int second) {
-        if (second < 10) {
-            return "00'0" + second + "''";
-        }
-        if (second < 60) {
-            return "00'" + second + "''";
-        }
-        int minute = second / 60;
-        second -= (minute * 60);
-        if (minute < 10) {
-            if (second < 10) {
-                return "0" + minute + "'0" + second + "''";
-            }
-            return "0" + minute + "'" + second + "''";
-        }
-        if (second < 10) {
-            return minute + ":'0" + second + "''";
-        }
-        return minute + "'" + second + "''";
-    }
-
     private static double rad(double d) {
         return d * Math.PI / 180.0;
     }
@@ -479,32 +492,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return s;
     }
 
-    public int getPace(double length, int t) {
-        return (int) (t / length);
+    public double getPace(double length, int t) {
+        return (length / t);
     }
 
     /*time display*/
     public void updateTextView() {
         textTime.setText(getTime(count));
-        for (int i = 1; i < latList.size(); i++) {
-            s = GetDistance(latList.get(i - 1),
-                    lonList.get(i - 1),
-                    latList.get(i),
-                    lonList.get(i));
-        }
 
-        for (int j=10; j < latList.size(); j=j+10 ){
-            double d = GetDistance(latList.get(j - 10),
-                    lonList.get(j - 10),
+        int size = latList.size();
+        double s;
+        if (size > 1) {
+            s = GetDistance(latList.get(size - 2), lonList.get(size - 2), latList.get(size - 1), lonList.get(size - 1));
+        }
+        else s = 0;
+
+        sum += s;
+        @SuppressLint("DefaultLocale") String Sum = String.format("%.2f", sum);
+        textDis.setText(Sum);
+
+        double d = 0;
+        for (int j = Math.max(1, size - 5); j < size ; j += 1){
+            d += GetDistance(latList.get(j - 1),
+                    lonList.get(j - 1),
                     latList.get(j),
                     lonList.get(j));
-            int curPace = getPace(d, 10);
-            textPace.setText(formatOfPace(curPace));
         }
 
-        sum = sum + s;
-        @SuppressLint("DefaultLocale") String Sum = String .format("%.2f",sum);
-        textDis.setText(Sum);
+        double curPace = getPace(d, Math.min(size, 5)) * 3600;
+        @SuppressLint("DefaultLocale") String CurPace = String.format("%.2f", curPace);
+        textPace.setText(CurPace);
 
         pace = getPace(sum, count);
     }
