@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary_Khoa">#2c823a</color>
+    <color name="colorPrimaryDark_Khoa">#00540f</color>
+    <color name="colorAccent_Khoa">#c5e1a5</color>
+    <color name="data">#FA8C948C</color>
+    <color name="text">#5B5E5B</color>
+    <color name="s_light">#f8ffd7</color>
+    <color name="slow">#FF4D00</color>
+    <color name="normal">#FFFF00</color>
+    <color name="fast">#AAFF00</color>
+    <color name="button_text">#ffffff</color>
+    <color name="accent_material_dark_1">#c1e6aa</color>
+    <color name="unabled">#d1d6ce</color>
+    <color name="list_colorLight">#E7E3DC</color>
+    <color name="list_colorDark">#585854</color>
+
+    <color name="colorPrimary_Linh">#fff4ec</color>
+    <color name="colorPrimaryDark_Linh">#f6abb6</color>
+    <color name="colorAccent_Linh">#d4a5a5</color>
+    <color name="colorPrimaryLight">#4c8c4a</color>
+
+    <!-- colors for tab and screent text -->
+
+    <color name="black">#000000</color>
+    <color name="jet">#222222</color>
+    <color name="oil">#333333</color>
+    <color name="monsoon">#777777</color>
+    <color name="jumbo">#888888</color>
+    <color name="aluminum">#999999</color>
+    <color name="base">#AAAAAA</color>
+    <color name="iron">#CCCCCC</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="red_active">#f44336</color>
+    <color name="purple_active">#9c27b0</color>
+    <color name="blue_active">#03a9f4</color>
+    <color name="green_active">#4caf50</color>
+    <color name="blue_grey_active">#607d8b</color>
+    <color name="yellow_active">#ffeb3b</color>
+    <color name="orange_active">#ff9800</color>
+    <color name="grey_active">#9e9e9e</color>
+
+    <color name="red_inactive">#e57373</color>
+    <color name="purple_inactive">#ba68c8</color>
+    <color name="blue_inactive">#64b5f6</color>
+    <color name="green_inactive">#81c784</color>
+    <color name="blue_grey_inactive">#90a4ae</color>
+    <color name="yellow_inactive">#fff176</color>
+    <color name="orange_inactive">#ffb74d</color>
+    <color name="gery_inactive">#e0e0e0</color>
+
+    <color name="default_inactive">#78909c</color>
+
+    <color name="red_bg_light">#ffebee</color>
+    <color name="purple_bg_light">#f3e5f5</color>
+    <color name="blue_bg_light">#e3f2fd</color>
+    <color name="green_bg_light">#e8f5e9</color>
+    <color name="blue_grey_bg_light">#eceff1</color>
+    <color name="yellow_bg_light">#fffde7</color>
+    <color name="orange_bg_light">#fff3e0</color>
+    <color name="grey_bg_light">#fafafa</color>
+    <color name="grey_light">#E0E0E0</color>
+
+    <color name="pink_bg">#E91E63</color>
+    <color name="blue_text">#1A237E</color>
+
+    <color name="grey">#E9EAEE</color>
+    <color name="yellow">#F8BA0F</color>
+    <color name="blue">#293859</color>
+
+    <color name="squat">#0c4345</color>
+    <color name="crunch">#f7c4af</color>
+    <color name="jump">#c6b6f5</color>
+    <color name="pushup">#79dfed</color>
+    <color name="title">#373246</color>
+</resources>
